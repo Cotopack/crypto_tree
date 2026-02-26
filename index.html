@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Crypto Tree Clicker</title>
+  <style>
+    body { font-family: Arial; text-align: center; background: #e0ffe0; }
+    #tree { font-size: 100px; cursor: pointer; }
+    .btn { margin: 10px; padding: 10px; }
+  </style>
+</head>
+<body>
+  <h1>🌳 Crypto Tree Clicker</h1>
+  <div id="tree">🌲</div>
+  <p>Монеты: <span id="coins">0</span></p>
+  <p>Уровень дерева: <span id="level">1</span></p>
+  <button class="btn" onclick="upgrade()">Апгрейд (10 монет)</button>
+  <button class="btn" onclick="boost()">Буст за рекламу</button>
+  <button class="btn" onclick="save()">Сохранить</button>
+  <button class="btn" onclick="load()">Загрузить</button>
+
+  <script>
+    let coins = 0, level = 1;
+
+    document.getElementById("tree").onclick = () => {
+      coins += level;
+      update();
+    };
+
+    function upgrade() {
+      if (coins >= 10) {
+        coins -= 10;
+        level++;
+        update();
+      }
+    }
+
+    function boost() {
+      alert("Вы посмотрели рекламу! Получаете x2 буст на 10 кликов.");
+      let clicks = 10;
+      let oldClick = document.getElementById("tree").onclick;
+      document.getElementById("tree").onclick = () => {
+        coins += level * 2;
+        update();
+        clicks--;
+        if (clicks <= 0) document.getElementById("tree").onclick = oldClick;
+      };
+    }
+
+    function save() {
+      localStorage.setItem("cryptoTree", JSON.stringify({coins, level}));
+      alert("Прогресс сохранён!");
+    }
+
+    function load() {
+      let data = JSON.parse(localStorage.getItem("cryptoTree"));
+      if (data) { coins = data.coins; level = data.level; update(); }
+    }
+
+    function update() {
+      document.getElementById("coins").textContent = coins;
+      document.getElementById("level").textContent = level;
+    }
+  </script>
+</body>
+</html>
